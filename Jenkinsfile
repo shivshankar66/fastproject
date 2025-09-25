@@ -24,9 +24,9 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh "kubectl apply -f deploy_ks.yml"
-                sh "kubectl get pods"
-                sh "kubectl get svc"
+                bat "kubectl apply -f deploy_ks.yml"
+                bat "kubectl get pods"
+                bat "kubectl get svc"
             }
         }
     }
