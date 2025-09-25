@@ -16,9 +16,9 @@ pipeline {
 
         stage('Docker Build & Push') {
             steps {
-                sh "docker build -t $DOCKERHUB_CREDS_USR/$IMAGE_NAME:$IMAGE_TAG ."
-                sh "echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin"
-                sh "docker push $DOCKERHUB_CREDS_USR/$IMAGE_NAME:$IMAGE_TAG"
+                bat "docker build -t $DOCKERHUB_CREDS_USR/$IMAGE_NAME:$IMAGE_TAG ."
+                bat "echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin"
+                bat "docker push $DOCKERHUB_CREDS_USR/$IMAGE_NAME:$IMAGE_TAG"
             }
         }
 
