@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDS = credentials('dockerhub-creds')  // Jenkins me add kiya hua username/password
+        IMAGE_NAME = "fastproject"
+        IMAGE_TAG = "30"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/shivshankar66/fastproject.git'
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                sh "docker build -t $DOCKERHUB_CREDS_USR/$IMAGE_NAME:$IMAGE_TAG ."
+                sh "echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin"
+                sh "docker push $DOCKERHUB_CREDS_USR/$IMAGE_NAME:$IMAGE_TAG"
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh "kubectl apply -f deploy_ks.yml"
+                sh "kubectl get pods"
+                sh "kubectl get svc"
+            }
+        }
+    }
+
+    post {
+        success { echo "✅ Pipeline executed successfully!" }
+        failure { echo "❌ Pipeline failed!" }
+    }
+}
